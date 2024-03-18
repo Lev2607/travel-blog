@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import './globals.css'
 
 export default function Home() {
   return (
@@ -40,7 +39,6 @@ export default function Home() {
         <br />
         <h3 className={styles.commentsTitle}>Kommentare</h3>
         <div className={styles.comments}>
-          {/* Hier könnten Sie eine Liste von Kommentaren rendern */}
           <p>Noch keine Kommentare. Sei der Erste, der einen Kommentar abgibt!</p>
         </div>
         <form className={styles.commentForm}>
