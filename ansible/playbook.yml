@@ -1,0 +1,38 @@
+---
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+        update_cache: yes
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Clone the repository
+      git:
+        repo: 'https://github.com/Lev2607/travel-blog.git'
+        dest: /home/ec2-user/travel-blog
+
+    - name: Install dependencies
+      npm:
+        path: /home/ec2-user/travel-blog
+
+    - name: Build the application
+      command: npm run build
+      args:
+        chdir: /home/ec2-user/travel-blog
+
+    - name: Start the application
+      command: npm start
+      args:
+        chdir: /home/ec2-user/travel-blog
+
+    - name: Install AWS SDK
+      npm:
+        name: aws-sdk
+        path: /home/ec2-user/travel-blog
