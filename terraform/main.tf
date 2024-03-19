@@ -22,6 +22,12 @@ resource "aws_iam_role" "ec2_role" {
 EOF
 }
 
+# IAM Instance Profile
+resource "aws_iam_instance_profile" "ec2_instance_profile" {
+  name = "travelBlog_ec2_instance_profile"
+  role = aws_iam_role.ec2_role.name
+}
+
 # Policy zur IAM Rolle, um auf S3 und DynamoDB zugreifen zu können
 
 resource "aws_iam_policy_attachment" "s3_policy_attachment" {
@@ -36,12 +42,36 @@ resource "aws_iam_policy_attachment" "dynamodb_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
 
+# IAM Policy
+resource "aws_iam_policy" "s3_put_bucket_policy" {
+  name        = "s3_put_bucket_policy"
+  description = "Allows s3:PutBucketPolicy on travelblog-images bucket"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:PutBucketPolicy",
+      "Resource": "arn:aws:s3:::travelblog-images"
+    }
+  ]
+}
+EOF
+}
+
+# Attach the policy to the role
+resource "aws_iam_role_policy_attachment" "s3_put_bucket_policy_attachment" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.s3_put_bucket_policy.arn
+}
+
 # EC2 Instanz mit IAM Rolle
 
 resource "aws_instance" "web_server" {
   ami           = "ami-064573ac645743ea8"  # Amazon Linux 2 AMI
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_role.ec2_role.name
+  iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
 
   tags = {
     Name = "travelBlogInstance"
@@ -62,14 +92,12 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
   bucket = aws_s3_bucket.image_bucket.id
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow"
-        Principal = "*"
-        Action = [
-          "s3:GetObject",
-        ]
+        Effect = "Allow",
+        Principal = "*",
+        Action = "s3:*",
         Resource = [
           "${aws_s3_bucket.image_bucket.arn}/*",
         ]
