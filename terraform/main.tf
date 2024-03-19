@@ -39,7 +39,7 @@ resource "aws_iam_policy_attachment" "dynamodb_policy_attachment" {
 # EC2 Instanz mit IAM Rolle
 
 resource "aws_instance" "web_server" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI
+  ami           = "ami-064573ac645743ea8"  # Amazon Linux 2 AMI
   instance_type = "t2.micro"
   iam_instance_profile = aws_iam_role.ec2_role.name
 
