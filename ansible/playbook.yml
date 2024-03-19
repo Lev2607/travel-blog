@@ -34,6 +34,6 @@
         chdir: /home/ec2-user/travel-blog
 
     - name: Start the application
-      command: npm start
+      command: npm run start
       args:
         chdir: /home/ec2-user/travel-blog
