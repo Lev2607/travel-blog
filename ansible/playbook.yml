@@ -20,21 +20,37 @@
         . ~/.nvm/nvm.sh
         nvm use 14.21.3
         cd /home/ec2-user/travel-blog
-        npm run build
-      args:
-        chdir: /home/ec2-user/travel-blog
 
     - name: Install pm2
       npm:
         name: pm2
         global: yes
 
+    - name: Kill process on port 3000
+      command: fuser -k 3000/tcp
+      ignore_errors: yes
+
     - name: Start the application
       command: pm2 start npm -- start
       args:
-        chdir: /home/ec2-user/travel-blog  
-
-    - name: Start the application
-      command: npm start
-      args:
         chdir: /home/ec2-user/travel-blog
+
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: latest
+
+    - name: Remove default Nginx configuration
+      file:
+        path: /etc/nginx/conf.d/default.conf
+        state: absent
+
+    - name: Add Nginx configuration for application
+      copy:
+        src: ./travel-blog.conf
+        dest: /etc/nginx/conf.d/travel-blog.conf
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
