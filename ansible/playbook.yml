@@ -2,15 +2,6 @@
 - hosts: servers
   become: yes
   tasks:
-    - name: Install nvm
-      shell: |
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-        . ~/.nvm/nvm.sh
-        nvm install 16
-        nvm use 16
-      args:
-        creates: /root/.nvm
-
     - name: Install git
       command: yum install -y git
 
@@ -27,13 +18,13 @@
     - name: Build the application
       shell: |
         . ~/.nvm/nvm.sh
-        nvm use 16
+        nvm use 14.21.3
         cd /home/ec2-user/travel-blog
         npm run build
       args:
         chdir: /home/ec2-user/travel-blog
 
     - name: Start the application
-      command: npm run start
+      command: npm start
       args:
         chdir: /home/ec2-user/travel-blog
