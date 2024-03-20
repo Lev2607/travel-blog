@@ -1,17 +1,22 @@
+import Head from "next/head";
 import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>Komm wir gehen jetzt einfach Reisen !</h1>
-      <p className={styles.description}>
-        Entdecke die Welt und schreibe deine Geschichte
-      </p>
-
+    <>
+      <Head>
+        <title>Levent's Blog</title>
+        <meta name="description" content="Lass ma' reisen gehen" />
+      </Head>
+      <main className={styles.main}>
+        <h1 className={styles.title}>Komm wir gehen jetzt einfach Reisen !</h1>
+        <p className={styles.description}>
+          Entdecke die Welt und schreibe deine Geschichte
+        </p>
       <section className={styles.blogEntry}>
         <h2 className={styles.entryTitle}>Magisches Hawaii: Ein Paradies auf Erden</h2>
-        <Image className={styles.centerImage} src="/images/pexels-recal-media-60217.jpg" alt="Bild aus Hawaii" width={735} height={350} />
+        <Image className={styles.centerImage} src="/images/pexels-recal-media-60217.jpg" alt="Bild aus Hawaii" width={800} height={350} />
         <blockquote className={styles.entryContent}>
         <p>
         <br />
@@ -47,6 +52,7 @@ export default function Home() {
         </form>
       </section>
     </main>
+    </>
   );
 }
 
