@@ -26,10 +26,6 @@
         name: pm2
         global: yes
 
-    - name: Kill process on port 3000
-      command: fuser -k 3000/tcp
-      ignore_errors: yes
-
     - name: Start the application
       command: pm2 start npm -- start
       args:

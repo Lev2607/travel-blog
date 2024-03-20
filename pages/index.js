@@ -55,31 +55,3 @@ export default function Home() {
     </>
   );
 }
-
-async function submitComment(event) {
-  event.preventDefault();
-
-  const comment = event.target.elements.comment.value;
-
-  const response = await fetch('/api/comment', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ comment, postId: 'your_post_id' }),
-  });
-
-  if (response.ok) {
-    // Der Kommentar wurde erfolgreich gespeichert
-    // Sie können hier Code hinzufügen, um die Seite zu aktualisieren oder eine Benachrichtigung anzuzeigen
-  } else {
-    // Es gab einen Fehler beim Speichern des Kommentars
-    // Sie können hier Code hinzufügen, um eine Fehlermeldung anzuzeigen
-  }
-}
-
-// In Ihrer Kommentarform
-<form className={styles.commentForm} onSubmit={submitComment}>
-  <textarea id="comment" name="comment"></textarea>
-  <button type="submit">Kommentar absenden</button>
-</form>
