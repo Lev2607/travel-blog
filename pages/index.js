@@ -1,8 +1,56 @@
+import {useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
+  // Zustandsvariablen für die Kommentare und das aktuelle eingegebene Kommentar
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+
+  // Funktion zum Laden der Kommentare beim ersten Rendern der Komponente
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  // Funktion zum Laden der Kommentare von der API
+  const fetchComments = async () => {
+    try {
+      const response = await fetch("/api/comments");
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data);
+      } else {
+        console.error("Fehler beim Laden der Kommentare:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Fehler beim Laden der Kommentare:", error);
+    }
+  };
+
+  // Funktion zum Absenden eines neuen Kommentars
+  const submitComment = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch("/api/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comment: newComment }),
+      });
+      if (response.ok) {
+        // Kommentar erfolgreich gesendet, aktualisieren Sie die Kommentare
+        fetchComments();
+        setNewComment(""); // Leeren Sie das Textfeld nach dem Senden
+      } else {
+        console.error("Fehler beim Senden des Kommentars:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Fehler beim Senden des Kommentars:", error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -44,10 +92,18 @@ export default function Home() {
         <br />
         <h3 className={styles.commentsTitle}>Kommentare</h3>
         <div className={styles.comments}>
-          <p>Noch keine Kommentare. Sei der Erste, der einen Kommentar abgibt!</p>
+          {/* Anzeige der Kommentare */}
+          {comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <p key={index}>{comment}</p>
+            ))
+          ) : (
+            <p>Noch keine Kommentare. Sei der Erste, der einen Kommentar abgibt!</p>
+          )}
         </div>
-        <form className={styles.commentForm}>
-          <textarea id="comment" name="comment"></textarea>
+        {/* Kommentar-Formular */}
+        <form className={styles.commentForm} onSubmit={submitComment}>
+          <textarea id="comment" name="comment" value={newComment} onChange={(e) => setNewComment(e.target.value)}></textarea>
           <button type="submit">Kommentar absenden</button>
         </form>
       </section>
@@ -55,31 +111,3 @@ export default function Home() {
     </>
   );
 }
-
-async function submitComment(event) {
-  event.preventDefault();
-
-  const comment = event.target.elements.comment.value;
-
-  const response = await fetch('/api/comment', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ comment, postId: 'your_post_id' }),
-  });
-
-  if (response.ok) {
-    // Der Kommentar wurde erfolgreich gespeichert
-    // Sie können hier Code hinzufügen, um die Seite zu aktualisieren oder eine Benachrichtigung anzuzeigen
-  } else {
-    // Es gab einen Fehler beim Speichern des Kommentars
-    // Sie können hier Code hinzufügen, um eine Fehlermeldung anzuzeigen
-  }
-}
-
-// In Ihrer Kommentarform
-<form className={styles.commentForm} onSubmit={submitComment}>
-  <textarea id="comment" name="comment"></textarea>
-  <button type="submit">Kommentar absenden</button>
-</form>
