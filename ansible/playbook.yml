@@ -12,39 +12,31 @@
         force: yes
 
     - name: Install dependencies
-      npm:
-        path: /home/ec2-user/travel-blog
-
-    - name: Build the application
       shell: |
-        . ~/.nvm/nvm.sh
+        . /home/ec2-user/.nvm/nvm.sh
         nvm use 14.21.3
-        cd /home/ec2-user/travel-blog
-
-    - name: Install pm2
-      npm:
-        name: pm2
-        global: yes
-
-    - name: Start the application
-      command: pm2 start npm -- start
+        npm install
       args:
         chdir: /home/ec2-user/travel-blog
 
-    - name: Install Nginx
-      command: amazon-linux-extras install -y nginx1
+    - name: Build the application
+      shell: |
+        . /home/ec2-user/.nvm/nvm.sh
+        nvm use 14.21.3
+        npm run build
+      args:
+        chdir: /home/ec2-user/travel-blog
 
-    - name: Remove default Nginx configuration
-      file:
-        path: /etc/nginx/conf.d/default.conf
-        state: absent
+    - name: Install PM2
+      shell: |
+        . /home/ec2-user/.nvm/nvm.sh
+        nvm use 14.21.3
+        npm install -g pm2
 
-    - name: Add Nginx configuration for application
-      copy:
-        src: travel-blog.conf
-        dest: /etc/nginx/conf.d/travel-blog.conf
-
-    - name: Restart Nginx
-      service:
-        name: nginx
-        state: restarted
+    - name: Start the application
+      shell: |
+        . /home/ec2-user/.nvm/nvm.sh
+        nvm use 14.21.3
+        pm2 start npm --name "my-app" -- start
+      args:
+        chdir: /home/ec2-user/travel-blog
