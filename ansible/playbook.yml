@@ -24,6 +24,16 @@
       args:
         chdir: /home/ec2-user/travel-blog
 
+    - name: Install pm2
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Start the application
+      command: pm2 start npm -- start
+      args:
+        chdir: /home/ec2-user/travel-blog  
+
     - name: Start the application
       command: npm start
       args:
