@@ -36,9 +36,7 @@
         chdir: /home/ec2-user/travel-blog
 
     - name: Install Nginx
-      yum:
-        name: nginx
-        state: latest
+      command: amazon-linux-extras install -y nginx1
 
     - name: Remove default Nginx configuration
       file:
@@ -47,7 +45,7 @@
 
     - name: Add Nginx configuration for application
       copy:
-        src: ./travel-blog.conf
+        src: travel-blog.conf
         dest: /etc/nginx/conf.d/travel-blog.conf
 
     - name: Restart Nginx
