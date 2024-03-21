@@ -36,11 +36,32 @@
         profile_path: "~/.profile"
       when: ansible_distribution == "Ubuntu"
 
-
     - name: Start the application with PM2
       shell: /home/ubuntu/.npm-global/bin/pm2 start npm --name "my-app" -- start
       args:
         chdir: /home/ubuntu/travel-blog
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Create nginx directory if it doesn't exist
+      file:
+        path: /etc/nginx
+        state: directory    
+
+    - name: Copy Nginx configuration file
+      copy:
+        src: travel-blog.conf
+        dest: /etc/nginx/nginx.conf
+      notify: Reload Nginx
+
+  handlers:
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded    
 
 
 
