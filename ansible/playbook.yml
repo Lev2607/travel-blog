@@ -1,6 +1,8 @@
 ---
 - hosts: servers
   become: yes
+  vars:
+    app_path: /home/ubuntu/travel-blog
   tasks:
     - name: Install git
       apt:
@@ -10,21 +12,21 @@
     - name: Clone the repository
       git:
         repo: 'https://github.com/Lev2607/travel-blog.git'
-        dest: /home/ubuntu/travel-blog
+        dest: "{{ app_path }}"
         force: yes
       become_user: ubuntu
+      ignore_errors: true
 
     - name: Install dependencies
+      community.general.npm:
+        path: "{{ app_path }}"
       become_user: ubuntu
-      shell: npm install
-      args:
-        chdir: /home/ubuntu/travel-blog
 
     - name: Build the application
+      community.general.npm:
+        path: "{{ app_path }}"
+        command: run build
       become_user: ubuntu
-      shell: npm run build
-      args:
-        chdir: /home/ubuntu/travel-blog
 
     - name: Add PM2 to PATH
       become_user: ubuntu
@@ -39,7 +41,7 @@
     - name: Start the application with PM2
       shell: /home/ubuntu/.npm-global/bin/pm2 start npm --name "my-app" -- start
       args:
-        chdir: /home/ubuntu/travel-blog
+        chdir: "{{ app_path }}"
 
     - name: Install Nginx
       apt:
@@ -62,7 +64,3 @@
       service:
         name: nginx
         state: reloaded    
-
-
-
-
