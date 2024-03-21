@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "s3_put_bucket_policy_attachment" {
 
 # EC2 Instanz mit IAM Rollen und Key Pair
 resource "aws_instance" "web_server" {
-  ami           = "ami-064573ac645743ea8"  # Amazon Linux 2 AMI
+  ami           = "ami-023adaba598e661ac" 
   instance_type = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.ec2_instance_profile.name
 

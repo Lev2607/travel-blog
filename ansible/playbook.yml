@@ -3,40 +3,38 @@
   become: yes
   tasks:
     - name: Install git
-      command: yum install -y git
+      apt:
+        name: git
+        state: present
 
     - name: Clone the repository
       git:
         repo: 'https://github.com/Lev2607/travel-blog.git'
-        dest: /home/ec2-user/travel-blog
+        dest: /home/ubuntu/travel-blog
         force: yes
+      become_user: ubuntu
 
     - name: Install dependencies
-      shell: |
-        . /home/ec2-user/.nvm/nvm.sh
-        nvm use 14.21.3
-        npm install
+      become_user: ubuntu
+      shell: npm install
       args:
-        chdir: /home/ec2-user/travel-blog
+        chdir: /home/ubuntu/travel-blog
 
     - name: Build the application
-      shell: |
-        . /home/ec2-user/.nvm/nvm.sh
-        nvm use 14.21.3
-        npm run build
+      become_user: ubuntu
+      shell: npm run build
       args:
-        chdir: /home/ec2-user/travel-blog
+        chdir: /home/ubuntu/travel-blog
 
     - name: Install PM2
-      shell: |
-        . /home/ec2-user/.nvm/nvm.sh
-        nvm use 14.21.3
-        npm install -g pm2
+      become_user: ubuntu
+      shell: npm install -g pm2 --prefix=/usr/local
 
-    - name: Start the application
-      shell: |
-        . /home/ec2-user/.nvm/nvm.sh
-        nvm use 14.21.3
-        pm2 start npm --name "my-app" -- start
+    - name: Start the application with PM2
+      become_user: ubuntu
+      shell: pm2 start npm --name "my-app" -- start
       args:
-        chdir: /home/ec2-user/travel-blog
+        chdir: /home/ubuntu/travel-blog
+
+
+
