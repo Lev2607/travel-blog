@@ -16,7 +16,7 @@ export default function Home() {
         </p>
       <section className={styles.blogEntry}>
         <h2 className={styles.entryTitle}>Magisches Hawaii: Ein Paradies auf Erden</h2>
-        <Image className={styles.centerImage} src="/images/pexels-troy-squillaci-2521619.jpg" alt="Bild aus Hawaii" width={800} height={350} />
+        <Image className={styles.centerImage} src="/images/pexels-recal-media-60217.jpg" alt="Bild aus Hawaii" width={800} height={350} />
         <blockquote className={styles.entryContent}>
         <p>
         <br />
