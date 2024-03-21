@@ -28,7 +28,7 @@
 
     - name: Install PM2
       become_user: ubuntu
-      shell: npm install -g pm2 --prefix=/usr/local
+      shell: npm install -g pm2
 
     - name: Start the application with PM2
       become_user: ubuntu
