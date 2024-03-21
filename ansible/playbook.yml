@@ -26,15 +26,22 @@
       args:
         chdir: /home/ubuntu/travel-blog
 
-    - name: Install PM2
+    - name: Add PM2 to PATH
       become_user: ubuntu
-      shell: npm install -g pm2
+      lineinfile:
+        path: ~/.profile
+        line: 'export PATH=~/.npm-global/bin:$PATH'
+        insertafter: EOF
+      vars:
+        profile_path: "~/.profile"
+      when: ansible_distribution == "Ubuntu"
+
 
     - name: Start the application with PM2
-      become_user: ubuntu
-      shell: pm2 start npm --name "my-app" -- start
+      shell: /home/ubuntu/.npm-global/bin/pm2 start npm --name "my-app" -- start
       args:
         chdir: /home/ubuntu/travel-blog
+
 
 
 
