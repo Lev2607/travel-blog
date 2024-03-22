@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import axios from "axios";
 
+/*
 // Definieren Sie die API-Endpunkte für das Laden und Senden von Kommentaren
 const GET_COMMENTS_URL = "https://geexwt3fp3.execute-api.eu-central-1.amazonaws.com/comments";
 const POST_COMMENT_URL = "https://geexwt3fp3.execute-api.eu-central-1.amazonaws.com/comments";
@@ -36,7 +37,8 @@ export default function Home() {
       console.error("Fehler beim Senden des Kommentars:", error);
     }
   };
-
+*/
+export default function Home() {
   return (
     <>
       <Head>

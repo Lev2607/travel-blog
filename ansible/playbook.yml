@@ -4,11 +4,6 @@
   vars:
     app_path: /home/ubuntu/travel-blog
   tasks:
-    - name: Install git
-      apt:
-        name: git
-        state: present
-
     - name: Clone the repository
       git:
         repo: 'https://github.com/Lev2607/travel-blog.git'
@@ -23,30 +18,20 @@
       become_user: ubuntu
 
     - name: Build the application
-      community.general.npm:
-        path: "{{ app_path }}"
-        command: run build
+      shell: npm run build
+      args:
+        chdir: "{{ app_path }}"
       become_user: ubuntu
-
-    - name: Add PM2 to PATH
-      become_user: ubuntu
-      lineinfile:
-        path: ~/.profile
-        line: 'export PATH=~/.npm-global/bin:$PATH'
-        insertafter: EOF
-      vars:
-        profile_path: "~/.profile"
-      when: ansible_distribution == "Ubuntu"
 
     - name: Start the application with PM2
       shell: /home/ubuntu/.npm-global/bin/pm2 start npm --name "my-app" -- start
       args:
         chdir: "{{ app_path }}"
+      become_user: ubuntu
 
-    - name: Install Nginx
-      apt:
-        name: nginx
-        state: present
+    - name: Save PM2 process list
+      shell: /home/ubuntu/.npm-global/bin/pm2 save
+      become_user: ubuntu
 
     - name: Create nginx directory if it doesn't exist
       file:
@@ -55,12 +40,25 @@
 
     - name: Copy Nginx configuration file
       copy:
-        src: travel-blog.conf
-        dest: /etc/nginx/nginx.conf
+        content: |
+          server {
+            listen 80;
+            server_name 18.184.152.58;
+
+            location / {
+              proxy_pass http://localhost:3000;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection 'upgrade';
+              proxy_set_header Host $host;
+              proxy_cache_bypass $http_upgrade;
+            }
+          }
+        dest: /etc/nginx/sites-available/travel-blog
       notify: Reload Nginx
 
   handlers:
     - name: Reload Nginx
       service:
         name: nginx
-        state: reloaded    
+        state: reloaded
