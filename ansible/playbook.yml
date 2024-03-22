@@ -1,64 +1,30 @@
 ---
-- hosts: servers
-  become: yes
-  vars:
-    app_path: /home/ubuntu/travel-blog
+- name: Konfiguration der Reiseblog-Anwendung
+  hosts: all
+  become: true
   tasks:
-    - name: Clone the repository
+    - name: Klone das GitHub-Repository
       git:
-        repo: 'https://github.com/Lev2607/travel-blog.git'
-        dest: "{{ app_path }}"
-        force: yes
-      become_user: ubuntu
-      ignore_errors: true
+        repo: https://github.com/Lev2607/travel-blog.git
+        dest: /path/to/your/nextjs/app
 
-    - name: Install dependencies
-      community.general.npm:
-        path: "{{ app_path }}"
-      become_user: ubuntu
+    - name: Erstellen der NGINX-Konfiguration für die Next.js-Anwendung
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - Restart NGINX
 
-    - name: Build the application
-      shell: npm run build
-      args:
-        chdir: "{{ app_path }}"
-      become_user: ubuntu
-
-    - name: Start the application with PM2
-      shell: /home/ubuntu/.npm-global/bin/pm2 start npm --name "my-app" -- start
-      args:
-        chdir: "{{ app_path }}"
-      become_user: ubuntu
-
-    - name: Save PM2 process list
-      shell: /home/ubuntu/.npm-global/bin/pm2 save
-      become_user: ubuntu
-
-    - name: Create nginx directory if it doesn't exist
-      file:
-        path: /etc/nginx
-        state: directory    
-
-    - name: Copy Nginx configuration file
-      copy:
-        content: |
-          server {
-            listen 80;
-            server_name 18.184.152.58;
-
-            location / {
-              proxy_pass http://localhost:3000;
-              proxy_http_version 1.1;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection 'upgrade';
-              proxy_set_header Host $host;
-              proxy_cache_bypass $http_upgrade;
-            }
-          }
-        dest: /etc/nginx/sites-available/travel-blog
-      notify: Reload Nginx
+    - name: Starten der Next.js-Anwendung
+      shell: |
+        cd /path/to/your/nextjs/app
+        npm run build
+        npm start
+      async: 0
+      poll: 0
 
   handlers:
-    - name: Reload Nginx
+    - name: Restart NGINX
       service:
         name: nginx
-        state: reloaded
+        state: restarted
