@@ -1,43 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import styles from "./page.module.css";
-import axios from "axios";
 
-/*
-// Definieren Sie die API-Endpunkte für das Laden und Senden von Kommentaren
-const GET_COMMENTS_URL = "https://geexwt3fp3.execute-api.eu-central-1.amazonaws.com/comments";
-const POST_COMMENT_URL = "https://geexwt3fp3.execute-api.eu-central-1.amazonaws.com/comments";
-
-export default function Home() {
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState("");
-
-  useEffect(() => {
-    // Laden Sie beim ersten Rendern die aktuellen Kommentare
-    loadComments();
-  }, []);
-
-  const loadComments = async () => {
-    try {
-      const response = await axios.get(GET_COMMENTS_URL);
-      setComments(response.data);
-    } catch (error) {
-      console.error("Fehler beim Laden der Kommentare:", error);
-    }
-  };
-
-  const handleSubmitComment = async (event) => {
-    event.preventDefault();
-    try {
-      await axios.post(POST_COMMENT_URL, { comment: commentText });
-      setCommentText(""); // Kommentarfeld zurücksetzen
-      loadComments(); // Neu laden der Kommentare, um die aktualisierte Liste anzuzeigen
-    } catch (error) {
-      console.error("Fehler beim Senden des Kommentars:", error);
-    }
-  };
-*/
 export default function Home() {
   return (
     <>
@@ -46,16 +10,15 @@ export default function Home() {
         <meta name="description" content="Lass ma' reisen gehen" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>Komm wir gehen jetzt einfach Reisen!</h1>
+        <h1 className={styles.title}>Komm wir gehen jetzt einfach Reisen !</h1>
         <p className={styles.description}>
           Entdecke die Welt und schreibe deine Geschichte
         </p>
-        <section className={styles.blogEntry}>
-          <h2 className={styles.entryTitle}>Magisches Hawaii: Ein Paradies auf Erden</h2>
-          <br />
-          <Image className={styles.centerImage} src="/images/pexels-recal-media-60217.jpg" alt="Bild aus Hawaii" width={800} height={350} />
-          <blockquote className={styles.entryContent}>
-          <p>
+      <section className={styles.blogEntry}>
+        <h2 className={styles.entryTitle}>Magisches Hawaii: Ein Paradies auf Erden</h2>
+        <Image className={styles.centerImage} src="/images/pexels-recal-media-60217.jpg" alt="Bild aus Hawaii" width={800} height={350} />
+        <blockquote className={styles.entryContent}>
+        <p>
         <br />
         Aloha liebe Leser!<br />
         <br />
@@ -76,29 +39,19 @@ export default function Home() {
         Bis bald,<br />
         Levent
         </p>
-          </blockquote>
-        </section>
-        <section className={styles.comments}>
-          <h3 className={styles.commentsTitle}>Kommentare</h3>
-          <div className={styles.commentsList}>
-            {comments.map((comment, index) => (
-              <p key={index}>{comment}</p>
-            ))}
-          </div>
-          {/* Kommentarformular */}
-          <form className={styles.commentForm} onSubmit={handleSubmitComment}>
-            <textarea
-              id="comment"
-              name="comment"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Schreibe hier deinen Kommentar..."
-              required
-            ></textarea>
-            <button type="submit">Kommentar absenden</button>
-          </form>
-        </section>
-      </main>
+        </blockquote>
+        <br />
+        <br />
+        <h3 className={styles.commentsTitle}>Kommentare</h3>
+        <div className={styles.comments}>
+          <p>Noch keine Kommentare. Sei der Erste, der einen Kommentar abgibt!</p>
+        </div>
+        <form className={styles.commentForm}>
+          <textarea id="comment" name="comment"></textarea>
+          <button type="submit">Kommentar absenden</button>
+        </form>
+      </section>
+    </main>
     </>
   );
 }
