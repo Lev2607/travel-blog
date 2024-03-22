@@ -6,7 +6,8 @@
     - name: Klone das GitHub-Repository
       git:
         repo: https://github.com/Lev2607/travel-blog.git
-        dest: /path/to/your/nextjs/app
+        dest: /home/ubuntu/travel-blog
+        force: yes
 
     - name: Erstellen der NGINX-Konfiguration für die Next.js-Anwendung
       template:
@@ -17,9 +18,9 @@
 
     - name: Starten der Next.js-Anwendung
       shell: |
-        cd /path/to/your/nextjs/app
-        npm run build
-        npm start
+        cd /home/ubuntu/travel-blog/
+        sudo npm run build
+        sudo npm start
       async: 0
       poll: 0
 
