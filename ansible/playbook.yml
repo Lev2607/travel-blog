@@ -18,7 +18,7 @@
 
     - name: Starten der Next.js-Anwendung
       shell: |
-        cd /home/ubuntu/travel-blog/
+        cd /home/ubuntu/travel-blog/pages
         sudo npm run build
         sudo npm start
       async: 0
