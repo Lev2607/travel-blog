@@ -159,24 +159,14 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_attach" {
   policy_arn = aws_iam_policy.lambda_dynamodb_policy.arn
 }
 
-# Erstellung der Lambda-Funktion "SaveCommentToDynamoDB"
-resource "aws_lambda_function" "save_comment_lambda" {
-  function_name    = "SaveCommentToDynamoDB"
+# Neue Lambda-Funktion erstellen
+resource "aws_lambda_function" "comments_lambda" {
+  function_name    = "CommentsFunction"
   handler          = "index.handler"
-  runtime          = "nodejs20.x"
+  runtime          = "nodejs16.x"
   role             = aws_iam_role.lambda_role.arn
-  filename         = "/home/lev/travel-blog/lambda/SaveComment.zip"  # Dateipfad zu Ihrer Lambda-ZIP-Datei
-  source_code_hash = filebase64sha256("/home/lev/travel-blog/lambda/SaveComment.zip")
-}
-
-# Erstellung der Lambda-Funktion "GetCommentsFromDynamoDB"
-resource "aws_lambda_function" "get_comments_lambda" {
-  function_name    = "GetCommentsFromDynamoDB"
-  handler          = "index.handler"
-  runtime          = "nodejs20.x"
-  role             = aws_iam_role.lambda_role.arn
-  filename         = "/home/lev/travel-blog/lambda/GetComment.zip"  # Dateipfad zu Ihrer Lambda-ZIP-Datei
-  source_code_hash = filebase64sha256("/home/lev/travel-blog/lambda/GetComment.zip")
+  filename         = "/home/lev/travel-blog/lambda/myLambdaFunction.zip"
+  source_code_hash = filebase64sha256("/home/lev/travel-blog/lambda/myLambdaFunction.zip")
 }
 
 # Erstellung der API-Gateway-Ressourcen
@@ -207,11 +197,11 @@ resource "aws_api_gateway_integration" "get_comments_integration" {
   http_method             = "GET"
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.get_comments_lambda.invoke_arn
+  uri                     = aws_lambda_function.comments_lambda.invoke_arn
 }
 
 # Erstellung der Methodenantwort für die GET-Methode
-resource "aws_api_gateway_method_response" "get_comments_method_response" {
+resource "aws_api_gateway_method_response" "comments_method_response" {
   rest_api_id = aws_api_gateway_rest_api.comments_api.id
   resource_id = aws_api_gateway_resource.comments_resource.id
   http_method = aws_api_gateway_method.get_comments_method.http_method
@@ -223,16 +213,17 @@ resource "aws_api_gateway_method_response" "get_comments_method_response" {
 }
 
 # Erstellung der Integrationsantwort für die GET-Methode
-resource "aws_api_gateway_integration_response" "get_comments_integration_response" {
+resource "aws_api_gateway_integration_response" "comments_integration_response" {
   rest_api_id = aws_api_gateway_rest_api.comments_api.id
   resource_id = aws_api_gateway_resource.comments_resource.id
-  http_method = "GET"  # Überprüfen Sie, ob dies mit Ihrer API-Konfiguration übereinstimmt
-  status_code = "200"  # Überprüfen Sie den Statuscode entsprechend Ihrer Anwendung
+  http_method = "GET"
+  status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'http://3.120.187.136'"
+    "method.response.header.Access-Control-Allow-Origin" = "'http://18.197.158.249'"
   }
 }
+
 resource "aws_api_gateway_method" "comments_put_method" {
   rest_api_id   = aws_api_gateway_rest_api.comments_api.id
   resource_id   = aws_api_gateway_resource.comments_resource.id
@@ -265,7 +256,7 @@ resource "aws_api_gateway_integration" "comments_put_integration" {
   http_method             = "PUT"
   integration_http_method = "POST"  # Sie können dies an Ihre Anforderungen anpassen
   type                    = "AWS_PROXY"
-  uri                     = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:346024832365:function:SaveCommentToDynamoDB/invocations"
+  uri                     = aws_lambda_function.comments_lambda.invoke_arn
 }
 
 resource "aws_api_gateway_integration_response" "comments_put_integration_response" {
@@ -275,7 +266,7 @@ resource "aws_api_gateway_integration_response" "comments_put_integration_respon
   status_code = aws_api_gateway_method_response.comments_put_method_response.status_code
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'http://3.120.187.136'"
+    "method.response.header.Access-Control-Allow-Origin" = "'http://18.197.158.249'"
   }
 }
 
