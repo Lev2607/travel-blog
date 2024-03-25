@@ -171,7 +171,7 @@ resource "aws_api_gateway_integration_response" "comments_integration_response" 
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'http://18.197.158.249'"
+    "method.response.header.Access-Control-Allow-Origin" = "'http://3.66.65.144'"
   }
 }
 
@@ -217,7 +217,7 @@ resource "aws_api_gateway_integration_response" "comments_put_integration_respon
   status_code = aws_api_gateway_method_response.comments_put_method_response.status_code
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'http://18.197.158.249'"
+    "method.response.header.Access-Control-Allow-Origin" = "'http://3.66.65.144'"
   }
 }
 
