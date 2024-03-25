@@ -78,11 +78,6 @@ export default function Home() {
         </section>
         <section className={styles.comments}>
           <h3 className={styles.commentsTitle}>Kommentare</h3>
-          <div className={styles.commentsList}>
-            {comments.map((comment, index) => (
-              <p key={index}>{comment.comment}</p>      
-            ))}
-          </div>
           <form className={styles.commentForm} onSubmit={handleSubmitComment}>
             <textarea
               id="comment"
@@ -94,6 +89,12 @@ export default function Home() {
             ></textarea>
             <button type="submit">Kommentar absenden</button>
           </form>
+          <br />
+          <div className={styles.commentsList}>
+            {comments.map((comment, index) => (
+              <p key={index}>{comment.comment}</p>      
+            ))}
+          </div>
         </section>
       </main>
     </>
