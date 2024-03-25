@@ -80,7 +80,7 @@ export default function Home() {
           <h3 className={styles.commentsTitle}>Kommentare</h3>
           <div className={styles.commentsList}>
             {comments.map((comment, index) => (
-              <p key={index}>{comment}</p>
+              <p key={index}>{comment.comment}</p>      
             ))}
           </div>
           <form className={styles.commentForm} onSubmit={handleSubmitComment}>
