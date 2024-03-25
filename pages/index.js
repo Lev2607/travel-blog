@@ -5,8 +5,8 @@ import styles from "./page.module.css";
 import axios from "axios";
 
 // API-Endpunkte für das Laden und Senden von Kommentaren
-const GET_COMMENTS_URL = "https://wcsq6x0vs1.execute-api.eu-central-1.amazonaws.com/prod/comments";
-const POST_COMMENT_URL = "https://wcsq6x0vs1.execute-api.eu-central-1.amazonaws.com/prod/comments";
+const GET_COMMENTS_URL = "https://oahvy3conxlytq6ufqz4cevt3a0fyihl.lambda-url.eu-central-1.on.aws/";
+const POST_COMMENT_URL = "https://oahvy3conxlytq6ufqz4cevt3a0fyihl.lambda-url.eu-central-1.on.aws/";
 
 export default function Home() {
   const [comments, setComments] = useState([]);
