@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import axios from "axios";
 
-// Definieren Sie die API-Endpunkte für das Laden und Senden von Kommentaren
+// API-Endpunkte für das Laden und Senden von Kommentaren
 const GET_COMMENTS_URL = "https://wcsq6x0vs1.execute-api.eu-central-1.amazonaws.com/prod/comments";
 const POST_COMMENT_URL = "https://wcsq6x0vs1.execute-api.eu-central-1.amazonaws.com/prod/comments";
 
@@ -13,7 +13,7 @@ export default function Home() {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    // Laden Sie beim ersten Rendern die aktuellen Kommentare
+    // Laden beim ersten Rendern der aktuellen Kommentare
     loadComments();
   }, []);
 
@@ -83,7 +83,6 @@ export default function Home() {
               <p key={index}>{comment}</p>
             ))}
           </div>
-          {/* Kommentarformular */}
           <form className={styles.commentForm} onSubmit={handleSubmitComment}>
             <textarea
               id="comment"
